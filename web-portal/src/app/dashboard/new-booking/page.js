@@ -18,8 +18,20 @@ function AddressAutocomplete({ value, onChange, onSelect, placeholder, className
     if (!query || query.length < 3) { setSuggestions([]); return; }
     setLoading(true);
     try {
-      const data = await api.autocomplete(query);
-      setSuggestions(data.suggestions || []);
+      // Call Nominatim directly from browser to avoid Render IP blocking
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&addressdetails=1`;
+      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      const data = await res.json();
+      const seen = new Set();
+      const results = [];
+      for (const item of data) {
+        const key = `${parseFloat(item.lat).toFixed(4)}_${parseFloat(item.lon).toFixed(4)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        results.push({ display: item.display_name, lat: parseFloat(item.lat), lng: parseFloat(item.lon) });
+        if (results.length >= 6) break;
+      }
+      setSuggestions(results);
     } catch { setSuggestions([]); }
     finally { setLoading(false); }
   }, []);
@@ -105,12 +117,19 @@ export default function NewBookingPage() {
     api.getDrivers().then(d => setDrivers(d.drivers || [])).catch(console.error);
   }, []);
 
-  // Calculate route when both coords are available
+  // Calculate route when both coords are available — call OSRM directly from browser
   useEffect(() => {
     if (pickupCoords && dropoffCoords) {
-      api.getDistance(pickupCoords.lat, pickupCoords.lng, dropoffCoords.lat, dropoffCoords.lng)
-        .then(dist => { if (dist) setRouteInfo(dist); })
-        .catch(() => {});
+      const url = `https://router.project-osrm.org/route/v1/driving/${pickupCoords.lng},${pickupCoords.lat};${dropoffCoords.lng},${dropoffCoords.lat}?overview=false`;
+      fetch(url).then(r => r.json()).then(data => {
+        if (data.code === 'Ok' && data.routes?.[0]) {
+          const route = data.routes[0];
+          setRouteInfo({
+            distanceKm: parseFloat((route.distance / 1000).toFixed(2)),
+            durationMinutes: Math.ceil(route.duration / 60),
+          });
+        }
+      }).catch(() => {});
     }
   }, [pickupCoords, dropoffCoords]);
 
@@ -147,9 +166,16 @@ export default function NewBookingPage() {
       let dLat = dropoffCoords?.lat, dLng = dropoffCoords?.lng;
 
       if (!pLat || !dLat) {
+        const geocodeDirect = async (addr) => {
+          const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}&limit=1`;
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+          return null;
+        };
         const [pickupGeo, dropoffGeo] = await Promise.all([
-          !pLat ? api.geocode(form.pickupAddress).catch(() => null) : null,
-          !dLat ? api.geocode(form.dropoffAddress).catch(() => null) : null,
+          !pLat ? geocodeDirect(form.pickupAddress).catch(() => null) : null,
+          !dLat ? geocodeDirect(form.dropoffAddress).catch(() => null) : null,
         ]);
         if (!pLat && pickupGeo) { pLat = pickupGeo.lat; pLng = pickupGeo.lng; }
         if (!dLat && dropoffGeo) { dLat = dropoffGeo.lat; dLng = dropoffGeo.lng; }
