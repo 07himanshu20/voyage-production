@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  background: #0A1628;
+  color: #E8EAF0;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A1628; }
+::-webkit-scrollbar-thumb { background: #283670; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C8A951; }
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+  .gold-gradient {
+    background: linear-gradient(135deg, #C8A951 0%, #FFD94D 50%, #C8A951 100%);
+  }
+  .gold-text {
+    background: linear-gradient(135deg, #C8A951 0%, #FFD94D 50%, #C8A951 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .btn-gold {
+    @apply px-6 py-3 rounded-xl font-semibold text-navy-900 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold-500/25;
+    background: linear-gradient(135deg, #C8A951 0%, #FFD94D 50%, #C8A951 100%);
+  }
+  .btn-outline {
+    @apply px-6 py-3 rounded-xl font-semibold border border-gold-500/30 text-gold-500 transition-all duration-300 hover:bg-gold-500/10;
+  }
+  .input-dark {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/25 transition-all;
+  }
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+}

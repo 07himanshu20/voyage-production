@@ -1,0 +1,26 @@
+{
+  "name": "bestclass-web-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2",
+    "leaflet": "^1.9.4",
+    "react-leaflet": "^4.2.1",
+    "recharts": "^2.10.0",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.300.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16"
+  }
+}

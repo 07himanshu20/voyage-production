@@ -1,0 +1,27 @@
+{
+  "name": "bestclass-backend",
+  "version": "1.0.0",
+  "description": "Best Class Chauffeurs Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.3.1",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

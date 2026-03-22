@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Best Class Driver",
+    "slug": "bestclass-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0A1628"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1628"
+      },
+      "package": "com.eightclass.driver",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.eightclass.driver",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to share it with clients and ops team during trips."
+      }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "/dashboard/new-booking/page": "app/dashboard/new-booking/page.js",
+  "/dashboard/customers/page": "app/dashboard/customers/page.js",
+  "/dashboard/drivers/page": "app/dashboard/drivers/page.js",
+  "/dashboard/reports/page": "app/dashboard/reports/page.js",
+  "/dashboard/bookings/page": "app/dashboard/bookings/page.js",
+  "/dashboard/settings/page": "app/dashboard/settings/page.js"
+}

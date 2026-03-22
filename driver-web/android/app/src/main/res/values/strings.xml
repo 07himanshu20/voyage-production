@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">8Class Driver</string>
+    <string name="title_activity_main">8Class Driver</string>
+    <string name="package_name">com.eightclass.driver</string>
+    <string name="custom_url_scheme">com.eightclass.driver</string>
+</resources>

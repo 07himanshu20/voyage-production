@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Best Class",
+    "slug": "bestclass-customer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0A1628"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1628"
+      },
+      "package": "com.eightclass.customer"
+    },
+    "ios": {
+      "bundleIdentifier": "com.eightclass.customer"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
