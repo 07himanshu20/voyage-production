@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const fetch = require('node-fetch');
 
 const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/bookings');
@@ -49,6 +50,7 @@ app.get('/api/geocode', async (req, res) => {
       res.status(404).json({ error: 'Address not found' });
     }
   } catch (e) {
+    console.error('Geocoding error:', e.message);
     res.status(500).json({ error: 'Geocoding failed' });
   }
 });
@@ -85,6 +87,7 @@ app.get('/api/autocomplete', async (req, res) => {
     }
     res.json({ suggestions });
   } catch (e) {
+    console.error('Autocomplete error:', e.message);
     res.json({ suggestions: [] });
   }
 });
