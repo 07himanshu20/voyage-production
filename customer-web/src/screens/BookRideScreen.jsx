@@ -16,8 +16,20 @@ function AddressInput({ value, onChange, onSelect, placeholder, dotColor }) {
     if (!query || query.length < 3) { setSuggestions([]); return; }
     setLoading(true);
     try {
-      const data = await api.autocomplete(query);
-      setSuggestions(data.suggestions || []);
+      // Call Nominatim directly from browser for reliable geolocation
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&addressdetails=1`;
+      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      const data = await res.json();
+      const seen = new Set();
+      const results = [];
+      for (const item of data) {
+        const key = `${parseFloat(item.lat).toFixed(4)}_${parseFloat(item.lon).toFixed(4)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        results.push({ display: item.display_name, lat: parseFloat(item.lat), lng: parseFloat(item.lon) });
+        if (results.length >= 6) break;
+      }
+      setSuggestions(results);
     } catch { setSuggestions([]); }
     finally { setLoading(false); }
   }, []);
@@ -173,6 +185,27 @@ export default function BookRideScreen({ navigation }) {
     api.getExtras().then(d => setExtras(d.extras || [])).catch(console.error);
   }, []);
 
+  // Geocode directly via Nominatim (browser-side, no backend needed)
+  const geocodeDirect = async (address) => {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    const data = await res.json();
+    if (data[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+    return null;
+  };
+
+  // Calculate distance via OSRM directly from browser
+  const getDistanceDirect = async (pLat, pLng, dLat, dLng) => {
+    const url = `https://router.project-osrm.org/route/v1/driving/${pLng},${pLat};${dLng},${dLat}?overview=false`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code === 'Ok' && data.routes?.[0]) {
+      const route = data.routes[0];
+      return { distanceKm: parseFloat((route.distance / 1000).toFixed(2)), durationMinutes: Math.ceil(route.duration / 60) };
+    }
+    return null;
+  };
+
   // Geocode and calculate distance
   const geocodeAndCalculate = async () => {
     if (!form.pickup || !form.dropoff) {
@@ -181,17 +214,17 @@ export default function BookRideScreen({ navigation }) {
     }
     setGeocoding(true);
     try {
-      const [pGeo, dGeo] = await Promise.all([
-        api.geocode(form.pickup),
-        api.geocode(form.dropoff),
-      ]);
+      // Use already-selected coords from dropdown, or geocode fresh
+      let pGeo = pickupCoords || await geocodeDirect(form.pickup);
+      let dGeo = dropoffCoords || await geocodeDirect(form.dropoff);
+
       if (!pGeo?.lat) { alert(`Could not find: "${form.pickup}"`); setGeocoding(false); return false; }
       if (!dGeo?.lat) { alert(`Could not find: "${form.dropoff}"`); setGeocoding(false); return false; }
 
       setPickupCoords(pGeo);
       setDropoffCoords(dGeo);
 
-      const dist = await api.getDistance(pGeo.lat, pGeo.lng, dGeo.lat, dGeo.lng).catch(() => null);
+      const dist = await getDistanceDirect(pGeo.lat, pGeo.lng, dGeo.lat, dGeo.lng).catch(() => null);
       if (dist) setRouteInfo(dist);
 
       setGeocoding(false);

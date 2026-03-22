@@ -23,10 +23,18 @@ export default function ProfileScreen() {
 
   const handleSave = async () => {
     try {
-      await api.updateProfile(user.id, {
+      const res = await api.updateProfile(user.id, {
         name: form.name, phone: form.phone,
         vehicle: { make: form.make, model: form.model, plate: form.plate, color: form.color },
       });
+      if (res.driver) {
+        setDriver(res.driver);
+        setForm({
+          name: res.driver.name, phone: res.driver.phone,
+          make: res.driver.vehicle.make, model: res.driver.vehicle.model,
+          plate: res.driver.vehicle.plate, color: res.driver.vehicle.color,
+        });
+      }
       setEditing(false);
     } catch (e) { alert(e.message); }
   };
