@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/lib/api';
@@ -7,6 +7,14 @@ import { getSocket } from '@/lib/socket';
 import { Search, Filter, UserPlus, X, Check, ChevronDown } from 'lucide-react';
 
 export default function BookingsPage() {
+  return (
+    <Suspense fallback={<div className="text-white/40 p-8">Loading bookings...</div>}>
+      <BookingsContent />
+    </Suspense>
+  );
+}
+
+function BookingsContent() {
   const searchParams = useSearchParams();
   const [bookings, setBookings] = useState([]);
   const [drivers, setDrivers] = useState([]);
