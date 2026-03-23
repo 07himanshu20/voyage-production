@@ -58,7 +58,7 @@ export default function LoginScreen() {
             className="w-20 h-20 rounded-[22px] mx-auto mb-5 flex items-center justify-center shadow-lg shadow-yellow-600/20"
             style={{ background: 'linear-gradient(135deg, #C8A951, #FFD94D)' }}
           >
-            <span className="text-4xl font-extrabold" style={{ color: '#0A1628' }}>8</span>
+            <span className="text-2xl font-extrabold tracking-tight" style={{ color: '#0A1628' }}>BC</span>
           </motion.div>
           <h1 className="text-3xl font-bold tracking-wider" style={{ color: '#C8A951' }}>Best Class</h1>
           <p className="text-[10px] tracking-[6px] uppercase mt-1" style={{ color: 'rgba(255,255,255,0.25)' }}>CHAUFFEUR</p>

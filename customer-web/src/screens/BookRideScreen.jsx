@@ -304,7 +304,7 @@ export default function BookRideScreen({ navigation }) {
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-32">
+      <div className="flex-1 overflow-y-auto px-5 pb-40">
         {/* Step 1: Route */}
         {step === 1 && (
           <div>

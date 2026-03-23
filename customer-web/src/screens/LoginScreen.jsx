@@ -51,7 +51,7 @@ export default function LoginScreen() {
         {/* Branding */}
         <div className="text-center mb-14">
           <div className="w-20 h-20 rounded-3xl bg-gold flex items-center justify-center mx-auto mb-5" style={{ boxShadow: '0 8px 32px rgba(200,169,81,0.3)' }}>
-            <span className="text-4xl font-extrabold text-bg">8</span>
+            <span className="text-2xl font-extrabold text-bg tracking-tight">BC</span>
           </div>
           <h1 className="text-4xl font-bold text-gold tracking-widest">Best Class</h1>
           <p className="text-[11px] text-text-muted tracking-[3px] uppercase mt-2">Premium Chauffeur Services</p>

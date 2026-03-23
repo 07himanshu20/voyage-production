@@ -307,7 +307,21 @@ function ChatView({ chatType, booking, user, onBack }) {
 export default function ChatScreen({ navigation, route }) {
   const { user } = useAuth();
   const [chatType, setChatType] = useState(null); // null = list, 'driver' | 'company' | 'ai'
-  const booking = route?.params?.booking || null;
+  const [activeBooking, setActiveBooking] = useState(null);
+  const booking = route?.params?.booking || activeBooking;
+
+  // Auto-fetch active booking if none passed via route params
+  useEffect(() => {
+    if (route?.params?.booking) {
+      setActiveBooking(route.params.booking);
+      return;
+    }
+    api.getBookings(user.id).then(data => {
+      const bookings = data.bookings || [];
+      const active = bookings.find(b => ['assigned', 'confirmed', 'in_progress'].includes(b.status));
+      if (active) setActiveBooking(active);
+    }).catch(() => {});
+  }, [user.id, route?.params?.booking]);
 
   const goHome = () => navigation.navigate('Home');
 
